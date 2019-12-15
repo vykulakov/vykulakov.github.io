@@ -1,5 +1,6 @@
-# Just personal short notes
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-### [Repair YUM database](repair_yum_database.md)
-
-Describes some usual problems with the YUM database which can be seen on nodes.
+layout: home
+---

@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "Repair YUM database"
+date:   2019-12-15 12:15:03 +0300
+categories: administration
+---
 # Repair YUM database
 
 ## YUM database
