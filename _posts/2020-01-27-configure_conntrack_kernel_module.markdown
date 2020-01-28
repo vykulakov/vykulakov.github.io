@@ -48,30 +48,35 @@ Such output means that all is fine.
 The module may be loaded automatically at boot time which is very useful in the
 most of cases and there are some ways to do it.
 
-The simplest way to load the module is creating a simple test file under the
+The simplest way to load the module is creating a simple config file under the
 `/etc/modules-load.d/` directory:
 ```
 # cat /etc/modules-load.d/nf_conntrack.conf
 nf_conntrack
 ```
 If we need some sort of configuration of the module at the same time we must
-create yet another test file:
+create yet another config file:
 ```
 # cat /etc/modprobe.d/nf_conntrack.conf
 options nf_conntrack hashsize=8192
 ```
-See the `modules-load.d(5)` and `systemd-modules-load.service(8)` man pages
-for details.
+
+This is a standard and recommended way to configure persistent module loading
+in RH/CentOS 7. See links at the end of the page and the `modules-load.d(5)`
+and `systemd-modules-load.service(8)` man pages for details.
 
 The second way to load the module at boot time requires only one additional
-file which is a little bit more convenient to support: 
+config file which is a little bit more convenient to support: 
 ```
 # cat /etc/sysconfig/modules/nf_conntrack.modules
 #!/bin/sh
 exec /sbin/modprobe nf_conntrack hashsize=8192 >/dev/null 2>&1
 ```
-The ` >/dev/null 2>&1` part of the command redirects any output to `/dev/null`
+The `>/dev/null 2>&1` part of the command redirects any output to `/dev/null`
 so the `modprobe` command remains quiet.
+
+This is a standard and recommended way to configure persistent module loading
+in RH/CentOS 6. See links at the end of the page for details.
 
 After rebooting a node we should find out that the module is loaded (see the
 `lsmod` command above) and has the correct configuration:
@@ -92,12 +97,29 @@ for testing purposes or something. It is possible to do by changing the values
 in the files above with subsequent reloading of the module. But usually it is
 hard to unload and then load the module again because of module dependencies.
 
-So in this case we can use a special file(s):
+To configure the module without its reloading or restarting the whole system
+there are some ways as well and a particular way depends on a Linux kernel
+version. For old kernels like `3.10.x` we should use special files like this:
 ```
 # echo 16384 > /sys/module/nf_conntrack/parameters/hashsize
 ```
-And after this command we may check the current values of the parameters again
-to be sure that the new values were applied:
+
+For newer kernels like `4.x` or `5.x` we should use `sysctl`:
+```
+# sysctl -w net.netfilter.nf_conntrack_buckets=16384
+16384
+```
+
+Additionally, we may store that `sysctl` parameter in a config file and then
+just reload the whole `sysctl` configuration:
+```
+# cat /etc/sysctl.d/00-test.conf
+net.netfilter.nf_conntrack_buckets=16384
+# sysctl -p
+```
+
+After executing those commands it is worth to check the current values of
+the parameters just to be sure that the new values were applied:
 ```
 # sysctl net.netfilter.nf_conntrack_buckets
 net.netfilter.nf_conntrack_buckets = 16384
@@ -106,8 +128,38 @@ net.netfilter.nf_conntrack_buckets = 16384
 # cat /sys/module/nf_conntrack/parameters/hashsize
 16384
 ```
+All these places should contain the same value!
 
-But don't forget that after rebooting the node this new value will be lost.
+And finally, don't forget that after rebooting the node this new values will be
+lost (except those configured via the `/etc/sysctl.d/*.conf` files).
+
+## Load the module with iptables
+
+If iptables is already used on nodes as a firewall then it may be used to load
+the module and configure it automatically at loading or even reloading of
+iptables.
+
+To enable this feature it is necessary to change iptables configuration:
+```
+# cat /etc/sysconfig/iptables-config
+# Load additional iptables modules (nat helpers)
+#   Default: -none-
+# Space separated list of nat helpers (e.g. 'ip_nat_ftp ip_nat_irc'), which
+# are loaded after the firewall rules are applied. Options for the helpers are
+# stored in /etc/modprobe.conf.
+IPTABLES_MODULES="nf_conntrack"
+
+# Reload sysctl settings on start and restart
+#   Default: -none-
+# Space separated list of sysctl items which are to be reloaded on start.
+# List items will be matched by fgrep.
+IPTABLES_SYSCTL_LOAD_LIST=".nf_conntrack .bridge-nf"
+```
+Both parameters should be uncomment and should have correct values like in
+the example. Please note, that the module should be already configured via
+the `/etc/sysctl.conf` or `/etc/sysctl.d/*.conf` files before.
+
+And don't forget that this will work only on the new kernels.
 
 ## Sources
 * [WORKING WITH KERNEL MODULES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/kernel_administration_guide/chap-documentation-kernel_administration_guide-working_with_kernel_modules)
