@@ -3,3 +3,6 @@
 
 # Generated files
 _site
+
+# Vendored dependencies
+vendor
