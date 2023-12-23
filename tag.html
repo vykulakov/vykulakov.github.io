@@ -1,24 +1,18 @@
 <html>
 <head>
-	<title>Hello, world!</title>
+	<title>Push Notification: Tags</title>
 </head>
 <body>
-	<h1>Hello, world!</h1>
-	<p>Let's keep it simple!</p>
-	<p>Don't worry, be happy!</p>
-	<script>
-	var s = document.createElement('script');
-	s.src='//stoomawy.net/pfe/current/micro.tag.min.js?z=5737368'+'&sw=/sw-check-permissions-78fcc.js';
-	s.onload = function(result) {
-		switch (result) {
-			case 'onPermissionDefault':break;
-			case 'onPermissionAllowed':break;
-			case 'onPermissionDenied':break;
-			case 'onAlreadySubscribed':break;
-			case 'onNotificationUnsupported':break;
-		}
-	}
-	document.head.appendChild(s);
-	</script>
+	<h1>Push Notification: Tags</h1>
+	<p>
+		Select tag from the list:
+		<ul>
+			<li><a href="/tag_micro.html">Micro</a></li>
+			<li><a href="/tag_universal.html">Universal</a></li>
+		</ul>
+	</p>
+	<p>
+		Before subscribing with a new tag type all the data of the previous tag should be cleaned.
+	</p>
 </body>
 </html>

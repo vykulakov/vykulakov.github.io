@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Push Notification: Micro Tag</title>
+</head>
+<body>
+	<h1>Push Notification: Micro Tag</h1>
+	<script>
+		var s = document.createElement('script');
+		s.src='//stoomawy.net/pfe/current/micro.tag.min.js?z=5737368'+'&sw=/sw-check-permissions-78fcc.js';
+		s.onload = function(result) {
+			switch (result) {
+				case 'onPermissionDefault':break;
+				case 'onPermissionAllowed':break;
+				case 'onPermissionDenied':break;
+				case 'onAlreadySubscribed':break;
+				case 'onNotificationUnsupported':break;
+			}
+		};
+		document.head.appendChild(s);
+	</script>
+</body>
+</html>
