@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Push Notification: Micro Tag on RevShare with TrafficBack</title>
+</head>
+<body>
+	<h1>Push Notification: Micro Tag on RevShare with TrafficBack</h1>
+	<script>
+		var s = document.createElement('script');
+		s.src='//bujerdaz.com/pfe/current/micro.tag.min.js?z=6906148'+'&sw=/sw-check-permissions-523f8.js';
+		s.onload = function(result) {
+			switch (result) {
+				case 'onPermissionDefault':break;
+				case 'onPermissionAllowed':
+				window.location.replace("//whautsis.com/4/6906110");break;
+				case 'onPermissionDenied':
+				window.location.replace("//whautsis.com/4/6906110");break;
+				case 'onAlreadySubscribed':break;
+				case 'onNotificationUnsupported':break;
+			}
+		};
+		document.head.appendChild(s);
+	</script>
+</body>
+</html>
